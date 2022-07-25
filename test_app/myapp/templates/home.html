@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+ul, #myUL {
+  list-style-type: none;
+}
+
+/* #myUL {
+  margin: 0;
+  padding: 0;
+} */
+.box{
+  padding: 50px;
+  background-color: rgb(229, 229, 231);
+  width:85%; 
+  height: 80%; 
+  float: left; 
+  margin-top: 50%
+}
+.caret {
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none;
+}
+
+.caret::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+}
+.t1{
+text-align:center;
+border:1px solid black;
+padding: 5px;
+}
+.t2{
+color:blue;
+font-size:20px;
+}
+
+table{
+
+border:3px solid black;
+width:500px;
+}
+th,td{
+text-align:center;
+padding: 7px;
+font-weight:bold;
+}
+.tt1{
+border:2px solid black;
+width:100%;
+margin-top: 20px;
+/* background: radial-gradient(#653d84, #332042); */
+}
+tr:nth-child(odd){
+background-color:lightgray;
+}
+.verticalLine {
+            height: 100%;
+            border-right: 5px solid #000900;
+            position: absolute;
+            right: 50%;
+        }
+.caret-down::before {
+  -ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Safari */
+  transform: rotate(90deg);  
+}
+
+.nested {
+  display: none;
+}
+input{
+  margin-top: 30px;
+  font-size: 15px;
+}
+.active {
+  display: block;
+}
+</style>
+</head>
+<body style='background-color: rgb(229, 229, 231);'>
+<html>
+  
+    <div style='background-color: rgb(229, 229, 231); width:50%; height: 100%; float: left'>
+      <form method = 'POST' action="/create/"><br>
+        {% csrf_token %} 
+        <h1 style="margin-top:10px">Product Details</h1>
+         <div style='margin-left:20px; font-size: 20px;'>
+          Category: <select name ="categories">
+            <option disabled="true" selected> Please select category</option>
+            {% for category in categories %}
+            <option value="{{category.id}}">{{category.name}}</option>
+            {% endfor %}
+            </option>
+          </select><br>
+          Product name: <input type="text" name="product_name"><br>
+  
+          Product cost: <input type="text" name="product_cost"><br>
+  
+          <button type="submit" style="font-size:20px; border-radius: 5px;width:100px; margin-left: 180px; margin-top: 20px;" >Submit</button>
+         </div>
+      </form>
+      <div>
+        <table class="tt1"> 
+            
+            <tr>
+                <th class="t2">
+                  Category
+                 </th>
+                <th class="t2">
+                   Product
+                </th>
+                <th class="t2">
+                    Cost
+                </th>
+                <th class="t2">
+                  Edit/Delete
+              </th>
+            </tr>
+            {% for category in categories %}
+            {% for product in products %}
+            {% if category.id == product.category_id %}
+            <tr>
+                <td class="t1">
+                    {{category.name}}
+                </td>
+        <td class="t1">
+            {{product.name}}
+        </td>
+        <td class="t1">
+            {{product.cost}}
+        </td>
+        <td class="t1">
+          <a href="/product-edit/{{product.id}}">Edit</a> / 
+          <a href="/delete-user/{{i.id}}">Delete</a>
+      </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+        
+    
+        </table>
+    </div>
+    </div>
+    <div class="verticalLine"></div>
+    <div style='background-color: rgb(229, 229, 231); width:50%; height: 100%; float: right;'>
+      <h1 style="margin-top:10px;margin-left: 15px;">Tree View</h1>
+
+      <ul id="myUL">
+        <li><span class="caret">Categories</span>
+          <ul class="nested">
+              {% for category in categories %}
+            <li><span class="caret">{{ category }}</span>
+              
+              <ul class="nested">
+                {% for product in products %}
+                {% if category.id == product.category_id %}
+                <li><span class="caret">{{ product.name }}</span>
+                  <ul class="nested">
+                    <li>1 unit Cost - {{ product.cost }}</li>
+                  </ul>
+                </li>
+                {% endif %}
+                {% endfor %}
+              </ul>
+            </li>  
+            {% endfor %}
+          </ul>
+        </li>
+      </ul>
+    </div>
+</html>
+<script>
+var toggler = document.getElementsByClassName("caret");
+var i;
+
+for (i = 0; i < toggler.length; i++) {
+  toggler[i].addEventListener("click", function() {
+    this.parentElement.querySelector(".nested").classList.toggle("active");
+    this.classList.toggle("caret-down");
+  });
+}
+</script>
+
+</body>
+</html>

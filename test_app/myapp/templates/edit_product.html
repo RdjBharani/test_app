@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    input{
+        margin: 20px 0px 0px 0px;
+    }
+</style>
+</head>
+<body style='background-color: rgb(229, 229, 231);'>
+   <form method="POST" action="/product-update/{{data.id}}">
+    {% csrf_token %}
+    <div style = 'margin-left: 20px;'>
+        Category Name: <input type="text" value="{{data.category.name}}" disabled><br>
+        Product name: <input type="text" value="{{data.name}}" name="product_name"><br>
+        Product name: <input type="text" value="{{data.cost}}" name="product_cost">
+        <button type="submit" >Update</button>
+    </div>
+    
+   </form>
+</body>
+
+</html>
